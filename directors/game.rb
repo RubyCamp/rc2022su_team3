@@ -32,13 +32,19 @@ module Directors
 			@ground = Ground.new(size: GROUND_SIZE, level: GROUND_LEVEL)
 			self.scene.add(@ground.mesh)
 
+			#humanクラスによって生成されたインスタンスを格納する配列（水谷追加）
+			@humans = [Human.new(1,1,1)]
+			
+
 			# 攻撃側（上側）、防御側（下側）のそれぞれのプレイヤーキャラクタを生成
+
 			@players = []
 			@players << Players::Attacker.new(level: ATTACKER_LEVEL)
 			@players << Players::Defender.new(level: DEFENDER_LEVEL)
 
 			# 各プレイヤーのメッシュをシーンに登録
 			@players.each{|player| self.scene.add(player.mesh) }
+			# @humans.each{|human|self.scene.add(human.mesh)}
 
 			# 攻撃側が落とす爆弾の保存用配列を初期化
 			@bombs = []
@@ -57,6 +63,13 @@ module Directors
 			end
 			erase_bombs
 			self.camera.draw_score(@score)
+
+			#human追加テスト用関数
+			if mouse_button_down?(button: :m_left)
+				puts "add humans"
+				human = Human.new(1,-8,1)
+				self.scene.add(human.mesh)
+			end
 		end
 
 		private
@@ -81,6 +94,14 @@ module Directors
 			bombs.each do |bomb|
 				self.scene.add(bomb.mesh)
 				@bombs << bomb
+			end
+		end
+
+		#シーンに人間を追加
+		def add_humans(humans)
+			humans.each do |human|
+				self.scene.add(human.mesh)
+				@humans << human
 			end
 		end
 
