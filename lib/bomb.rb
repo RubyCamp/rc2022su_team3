@@ -23,7 +23,7 @@ class Bomb
 			geom_type: :sphere,
 			mat_type: :phong,
 			radius: 0.5,
-			color: 0xffffff
+			texture_map: MeshFactory.get_texture("textures/takoyaki.png")
 		)
 
 		# 爆弾の初期位置に対して、Y軸を1.0降ろして爆弾の初期座標を決定する。

@@ -124,7 +124,7 @@ module Directors
 
 		# シーンに光源を追加
 		def add_lights
-			light = Mittsu::PointLight.new(0xffffff)
+			light = Mittsu::AmbientLight.new(0xffffff)
 			light.position.set(1, 7, 1)
 			self.scene.add(light)
 		end
