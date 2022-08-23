@@ -2,15 +2,22 @@ require_relative '../lib/mesh_factory.rb'
 
 class Human
 	attr_reader:mesh
+	#bomb（たこやき）と人間が接触したとみなされる距離
+	INTERCEPTABLE_DISTANCE = 2.0
 
 	def initialize(x, y, z)
-
+		#(x:,y,:,z:)
 		#MeshFactoryクラスを利用してノーマルな正方形のmeshを生成する
 		@mesh = MeshFactory.generate(
 			geom_type: :box,
-			mat_type: :nomal,
+			mat_type: :phong,
 			color: 0xffffff
 		)
+
+		# @grade = grade
+
+		# 1フレームにおいてpopした人間を格納する配列を初期化
+		# @humans = []
 
 		self.mesh.position.x = x
 		self.mesh.position.y = y
@@ -24,9 +31,41 @@ class Human
 		@raycaster = Mittsu::Raycaster.new
 	end
 
-	#humanオブジェクトを消す処理
-	def self.operation(humans)
-		removed_humans = []
+	# def humanAdd
+	# 	@humans << Human.new(1,1,1)
+	# end
+	
+	# def collect_humans
+	# 	result = @humans.dup # 回収される爆弾を取り出す
+	# 	@humans.clear # 爆弾保管用配列をクリアする
+	# 	result
+	# end
+
+	# def self.operation(humans)
+	# 	removed_humans = []
+	# 	return removed_bombs
+	# end
+
+	def eat_Bombs(bombs = [])
+		intercepted_bombs = []
+		bomb_map = {}
+		bombs.each do |bomb|
+			bomb_map[bomb.mesh] = bomb
+		end
+		meshes = bomb_map.keys
+		@raycaster.set(self.mesh.position, @norm_vector)
+		collisions = @raycaster.intersect_objects(meshes)
+		if collisions.size > 0
+			obj = collisions.first[:object] # 最も近距離にあるオブジェクトを得る
+			if meshes.include?(obj)
+				# 当該オブジェクトと、当たり判定元オブジェクトの位置との距離を測る
+				distance = self.mesh.position.distance_to(obj.position)
+				if distance <= INTERCEPTABLE_DISTANCE
+					intercepted_bombs << bomb_map[obj]
+				end
+			end
+		end
+		intercepted_bombs
 	end
  
 end

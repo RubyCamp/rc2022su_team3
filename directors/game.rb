@@ -60,15 +60,24 @@ module Directors
 				player.play(key_statuses, self.selected_mode)
 				add_bombs(player.collect_bombs)
 				intercept(player)
+				
 			end
 			erase_bombs
 			self.camera.draw_score(@score)
 
+			@humans.each do |human|
+				human_Eat(human)
+			end
+
 			#human追加テスト用関数
 			if mouse_button_down?(button: :m_left)
 				puts "add humans"
-				human = Human.new(1,-8,1)
-				self.scene.add(human.mesh)
+				hum = []
+				hum << Human.new(1,-8,1)
+				hum << Human.new(3,-8,1)
+				hum << Human.new(5,-8,1)
+				hum << Human.new(1,-8,3)
+				add_humans(hum)
 			end
 		end
 
@@ -87,6 +96,23 @@ module Directors
 			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
 			@bombs -= removed_bombs
 			@score += removed_bombs.size
+		end
+
+		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
+		def human_Eat(human)
+			#humanクラス.operationでたこ焼きがあたった場合の配列が渡される
+			removed_bombs = human.eat_Bombs(@bombs)
+			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
+			@bombs -= removed_bombs
+			# removed_human.each{|human| self.scene.remove(bomb.mesh) }
+
+			# if human.grade == 3
+			# 	@score += 3
+			# elsif human.grade == 2 
+			# 	@score += 2 
+			# elsif human grade == 1
+			# 	@score += 1
+			# end
 		end
 
 		# シーンに爆弾を追加
