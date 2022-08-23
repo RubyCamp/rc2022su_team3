@@ -33,7 +33,7 @@ module Directors
 			self.scene.add(@ground.mesh)
 
 			#humanクラスによって生成されたインスタンスを格納する配列（水谷追加）
-			@humans = [Human.new(1,1,1)]
+			@humans = []
 			
 
 			# 攻撃側（上側）、防御側（下側）のそれぞれのプレイヤーキャラクタを生成

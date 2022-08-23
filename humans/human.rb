@@ -1,4 +1,4 @@
-require_relative 'mesh_factory'
+require_relative '../lib/mesh_factory.rb'
 
 class Human
 	attr_reader:mesh
@@ -24,8 +24,9 @@ class Human
 		@raycaster = Mittsu::Raycaster.new
 	end
 
-	#humanオブジェクトを爆発させて消す処理
+	#humanオブジェクトを消す処理
 	def self.operation(humans)
 		removed_humans = []
 	end
+ 
 end
