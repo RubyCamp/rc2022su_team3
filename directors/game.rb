@@ -72,6 +72,7 @@ module Directors
 		def erase_bombs
 			removed_bombs = Bomb.operation(@bombs, GROUND_LEVEL)
 			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
+			
 			@bombs -= removed_bombs
 			@score += removed_bombs.size
 		end
