@@ -81,31 +81,31 @@ module Directors
 		# 1フレーム分のゲーム進行処理
 		def render_frame
 
-			  timer
-				if @count_time < @game_time
-					@players.each do |player|
-					key_statuses = check_key_statuses(player)
-					player.play(key_statuses, self.selected_mode)
-					add_bombs(player.collect_bombs)
-					intercept(player)
-			  	end
-					erase_bombs
-			    self.camera.draw_score(@score)
-					self.camera.draw_time(@countdown_time)
-          @humans.each do |human|
-           human_Eat(human)
-          end
+			timer
+			if @count_time < @game_time
+				@players.each do |player|
+				key_statuses = check_key_statuses(player)
+				player.play(key_statuses, self.selected_mode)
+				add_bombs(player.collect_bombs)
+				intercept(player)
+		  	end
+			erase_bombs
+			self.camera.draw_score(@score)
+			self.camera.draw_time(@countdown_time)
 
-          #human追加テスト用関数
-          if key_down?(key: :k_z)
+			@humans.each do |human|
+				human_Eat(human)
+			end
 
-            puts "add humans"
-            hum = []
-            # hum  << human_randomGenerate
-            hum << Human.new(1,-8,0)
-            add_humans(hum)
-          end
-				end
+			#human追加テスト用関数
+			if key_down?(key: :k_z)
+				puts "add humans"
+				hum = []
+				# hum  << human_randomGenerate
+				hum << Human.new(1,-8,0)
+				add_humans(hum)
+			end
+			end
 		end
 
 		private
