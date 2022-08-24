@@ -4,7 +4,6 @@ require_relative 'mesh_factory'
 class Bomb
 	# 爆弾の3D形状（メッシュ）へのアクセサ
 	attr_reader :mesh
-	INTERCEPTABLE_DISTANCE = 2.0
 	# 与えられたBombオブジェクトの配列について、それぞれ1フレーム分動かした上でシーンから抹消されるべき個体を配列で返す。
 	def self.operation(bombs, ground_level)
 		removed_bombs = []
