@@ -29,7 +29,7 @@ module Directors
 			self.scene.add(exit_board.mesh)
 			@selectors = {
 				vs_com_board.mesh => vs_com_board,
-				vs_player_board.mesh => vs_player_board
+				vs_player_board.mesh => vs_player_board,
 				exit_board.mesh => exit_board
 			}
 
