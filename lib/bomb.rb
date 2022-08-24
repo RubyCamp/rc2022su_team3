@@ -6,7 +6,6 @@ class Bomb
 	attr_reader :mesh
 	attr_reader :plane
 	attr_reader :bom_start_time
-
 	# 与えられたBombオブジェクトの配列について、それぞれ1フレーム分動かした上でシーンから抹消されるべき個体を配列で返す。
 	def self.operation(bombs, ground_level)
 		removed_bombs = []
@@ -41,7 +40,9 @@ class Bomb
 		#       して利用する点に注意。
 		@mesh.position.copy(pos)
 		@mesh.position.y -= 1.0
+
 		@bom_start_time = Time.now
+
 	end
 
 	# 爆弾を1フレーム分移動させる。
