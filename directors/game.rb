@@ -73,8 +73,8 @@ module Directors
 				
 				puts "add humans"
 				hum = []
-				hum << Human.new(1,-8,0,2)
-				hum << Human.new(5,-8,5,1)
+				# hum  << human_randomGenerate
+				hum << Human.new(1,-8,0)
 				add_humans(hum)
 			end
 		end
@@ -94,6 +94,13 @@ module Directors
 			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
 			@bombs -= removed_bombs
 			# @score += removed_bombs.size
+		end
+
+		#ランダムな位置にhumanを出力
+		def human_randomGenerate
+			randomx = rand(30)
+			randomz = rand(30)
+			return Human.new(randomx,GROUND_LEVEL + 1,randomz)
 		end
 
 		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う

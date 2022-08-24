@@ -5,7 +5,7 @@ class Human
 	#bomb（たこやき）と人間が接触したとみなされる距離
 	INTERCEPTABLE_DISTANCE = 2.0
 
-	def initialize(x, y, z, grade)
+	def initialize(x, y, z)
 		#(x:,y,:,z:)
 		#MeshFactoryクラスを利用してノーマルな正方形のmeshを生成する
 		@mesh = MeshFactory.generate(
@@ -13,13 +13,12 @@ class Human
 			mat_type: :phong,
 			color: 0xffffff
 		)
-		
+
 		self.mesh.position.x = x
 		self.mesh.position.y = y
 		self.mesh.position.z = z
 
 		#gradeには1~3までの数値が入る
-		@grade = grade
 
 		#defenderクラスからのコピペ
 		# 交差判定用Raycasterの向きを決定する単位ベクトルを生成する
