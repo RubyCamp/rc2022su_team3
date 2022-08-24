@@ -9,7 +9,7 @@ module Directors
 			super
 
 			# タイトル画面の次に遷移する画面（ゲーム本編）用のディレクターオブジェクトを生成
-			@game_director = Directors::Game.new(renderer: renderer, aspect: aspect)
+			@game_director = Directors::Game.new(renderer: renderer, aspect: aspect, title_director: self)
 
 			# 地球のメッシュを生成してシーンに追加
 			# @earth = MeshFactory.get_earth
@@ -76,24 +76,24 @@ module Directors
 				if text_board.value == "EXIT"
 					exit
 				else
-					transition_scene(text_board.value)
+					transition(text_board.value)
 				end
 			end
 		end
 
 		# シーン切り替え実行
-		def transition_scene(val)
+		def transition(val)
 			# 次のシーンに選択された値を送る
 			@game_director.selected_mode = val
-
+			transition_scene(@game_director)
 			# 次のシーンを担当するディレクターのMittsuイベントのアクティベートを行う。
 			# ※ シーンを切り替える瞬間に行わないと、後発のディレクターのイベントハンドラで先発のイベントハンドラが
 			#    上書きされてしまうため、このタイミングで実行する。
-			@game_director.activate_events
+			# @game_director.activate_events
 
 			# next_directorアクセサを切り替えることで、次のフレームの描画からシーンが切り替わる。
 			# ※ このメカニズムはmain.rb側のメインループで実現している点に注意
-			self.next_director = @game_director
+			# self.next_director = @game_director
 		end
 
 		# シーンに光源を追加

@@ -66,7 +66,7 @@ module Directors
 			@start_time ||= Time.now
 			@count_time = Time.now - @start_time
 			@countdown_time = @game_time+1 - @count_time
-			p @countdown_time
+			# p @countdown_time
 			if @count_time > @game_time
 				transition
 			end
@@ -93,7 +93,7 @@ module Directors
 			    self.camera.draw_score(@score)
 					self.camera.draw_time(@countdown_time)
           @humans.each do |human|
-          　human_Eat(human)
+           human_Eat(human)
           end
 
           #human追加テスト用関数
