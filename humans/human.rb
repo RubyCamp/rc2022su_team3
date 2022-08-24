@@ -41,10 +41,17 @@ class Human
 	# 	result
 	# end
 
-	# def self.operation(humans)
-	# 	removed_humans = []
-	# 	return removed_bombs
-	# end
+	#たこやきと接触したhumanの配列が返される処理を書く
+	def self.operation(humans)
+		removed_humans = []
+		humans.each do |human|
+			removed = human.move(ground_level)
+			removed_bombs << human if removed
+		end
+		return removed_bombs
+	end
+
+	
 
 	def eat_Bombs(bombs = [])
 		intercepted_bombs = []

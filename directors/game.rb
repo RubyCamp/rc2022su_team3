@@ -70,13 +70,14 @@ module Directors
 			end
 
 			#human追加テスト用関数
-			if mouse_button_down?(button: :m_left)
+			if key_down?(key: :k_z)
+				
 				puts "add humans"
 				hum = []
-				hum << Human.new(1,-8,1)
-				hum << Human.new(3,-8,1)
-				hum << Human.new(5,-8,1)
-				hum << Human.new(1,-8,3)
+				hum << Human.new(1,-8,0)
+				hum << Human.new(5,-8,5)
+				hum << Human.new(7,-8,3)
+				hum << Human.new(11,-8,3)
 				add_humans(hum)
 			end
 		end
