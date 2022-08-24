@@ -12,17 +12,25 @@ module Directors
 			@game_director = Directors::Game.new(renderer: renderer, aspect: aspect)
 
 			# 地球のメッシュを生成してシーンに追加
-			@earth = MeshFactory.get_earth
-			self.scene.add(@earth)
-
+			# @earth = MeshFactory.get_earth
+			# self.scene.add(@earth)
+			geometry = Mittsu::PlaneGeometry.new(32, 24)
+			texture_map = Mittsu::ImageUtils.load_texture("textures/title_tako.png")
+			material = Mittsu::MeshLambertMaterial.new(map: texture_map)
+			mesh = Mittsu::Mesh.new(geometry, material)
+			self.scene.add(mesh)
+			
 			# テキスト用ボードオブジェクト追加
-			vs_com_board = TextBoard.new(texture_path: "textures/title_vs_com.png", value: Directors::Game::VS_COM_MODE)
-			vs_player_board = TextBoard.new(texture_path: "textures/title_vs_player.png", value: Directors::Game::VS_PLAYER_MODE, y: -2)
+			vs_com_board = TextBoard.new(texture_path: "textures/solo_play.png", value: Directors::Game::VS_COM_MODE, y: -2.25, scale_x: 3.5)
+			vs_player_board = TextBoard.new(texture_path: "textures/multi_play.png", value: Directors::Game::VS_PLAYER_MODE, y: -3.5, scale_x: 3.5)
+			exit_board = TextBoard.new(texture_path: "textures/exit.png", value: "EXIT", y: -5.0, scale_x: 3.5)
 			self.scene.add(vs_com_board.mesh)
 			self.scene.add(vs_player_board.mesh)
+			self.scene.add(exit_board.mesh)
 			@selectors = {
 				vs_com_board.mesh => vs_com_board,
-				vs_player_board.mesh => vs_player_board
+				vs_player_board.mesh => vs_player_board,
+				exit_board.mesh => exit_board
 			}
 
 			# Raycasterとマウス位置の単位ベクトルを収めるオブジェクトを生成
@@ -34,12 +42,12 @@ module Directors
 
 			# Mittsuのイベントをアクティベート（有効化）する
 			activate_events
-		end
-
+		end	
+		
 		# 1フレーム分のゲーム進行処理
 		def render_frame
 			# 少しずつ地球のメッシュを回転させる（自転を表現）
-			@earth.rotate_y(0.001)
+			# @earth.rotate_y(0.001)
 		end
 
 		private
@@ -65,7 +73,11 @@ module Directors
 			intersected = intersects.first
 			if intersected
 				text_board = @selectors[intersected[:object]]
-				transition_scene(text_board.value)
+				if text_board.value == "EXIT"
+					exit
+				else
+					transition_scene(text_board.value)
+				end
 			end
 		end
 
@@ -87,9 +99,9 @@ module Directors
 		# シーンに光源を追加
 		def add_lights
 			# 地球を照らすための照明
-			earth_light = Mittsu::DirectionalLight.new(0xffffff)
-			earth_light.position.set(5, 10, 5)
-			self.scene.add(earth_light)
+			tako_light = Mittsu::DirectionalLight.new(0xffffff)
+			tako_light.position.set(0, 0, 10)
+			self.scene.add(tako_light)
 
 			# 文字ボードを照らすための照明
 			text_light = Mittsu::SpotLight.new(0xffffff)
