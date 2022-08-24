@@ -10,8 +10,8 @@ module Directors
 
 		ATTACKER_LEVEL = 8    # 攻撃側プレイヤーの「高度」（Y座標値）
 		DEFENDER_LEVEL = -8   # 防御側プレイヤーの「高度」（Y座標値）
-		GROUND_LEVEL = -9     # 地面オブジェクトの「高度」（Y座標値）
-		GROUND_SIZE = 50.0    # 地面オブジェクトの広がり（面積）。地面オブジェクトは正方形のBoxで表現する
+		GROUND_LEVEL = -14     # 地面オブジェクトの「高度」（Y座標値）
+		GROUND_SIZE = 100.0    # 地面オブジェクトの広がり（面積）。地面オブジェクトは正方形のBoxで表現する
 
 		# コンストラクタ
 		def initialize(renderer:, aspect:)
