@@ -7,13 +7,13 @@ class TextBoard
 	DEFAULT_Z = 7
 
 	# コンストラクタ
-	def initialize(texture_path:, value:, x: DEFAULT_X, y: DEFAULT_Y, z: DEFAULT_Z)
+	def initialize(texture_path:, value:, x: DEFAULT_X, y: DEFAULT_Y, z: DEFAULT_Z, scale_x: 10.0, scale_y: 1.0)
 		# テキストテクスチャを貼り付けた板オブジェクトを生成する。
 		@mesh = MeshFactory.generate(
 			geom_type: :plane,
 			mat_type: :lambert,
-			scale_x: 10.0,
-			scale_y: 1.0,
+			scale_x: scale_x,
+			scale_y: scale_y,
 			segment_x: 10,
 			segment_y: 1,
 			texture_map: MeshFactory.get_texture(texture_path)

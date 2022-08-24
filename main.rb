@@ -4,6 +4,7 @@ require 'mittsu'
 Dir.glob("lib/*.rb") {|path| require_relative path }
 Dir.glob("players/*.rb") {|path| require_relative path }
 Dir.glob("directors/*.rb") {|path| require_relative path }
+Dir.glob("humans/*.rb") {|path| require_relative path }
 
 # 画面サイズとキャプション用の定数を定義
 SCREEN_WIDTH = 1024

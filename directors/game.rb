@@ -36,13 +36,19 @@ module Directors
 			@ground = Ground.new(size: GROUND_SIZE, level: GROUND_LEVEL)
 			self.scene.add(@ground.mesh)
 
+			#humanクラスによって生成されたインスタンスを格納する配列（水谷追加）
+			@humans = []
+			
+
 			# 攻撃側（上側）、防御側（下側）のそれぞれのプレイヤーキャラクタを生成
+
 			@players = []
 			@players << Players::Attacker.new(level: ATTACKER_LEVEL)
 			# @players << Players::Defender.new(level: DEFENDER_LEVEL)
 
 			# 各プレイヤーのメッシュをシーンに登録
 			@players.each{|player| self.scene.add(player.mesh) }
+			# @humans.each{|human|self.scene.add(human.mesh)}
 
 			# 攻撃側が落とす爆弾の保存用配列を初期化
 			@bombs = []
@@ -74,6 +80,7 @@ module Directors
 
 		# 1フレーム分のゲーム進行処理
 		def render_frame
+
 			  timer
 				if @count_time < @game_time
 					@players.each do |player|
@@ -85,8 +92,20 @@ module Directors
 					erase_bombs
 			    self.camera.draw_score(@score)
 					self.camera.draw_time(@countdown_time)
+          @humans.each do |human|
+          　human_Eat(human)
+          end
+
+          #human追加テスト用関数
+          if key_down?(key: :k_z)
+
+            puts "add humans"
+            hum = []
+            # hum  << human_randomGenerate
+            hum << Human.new(1,-8,0)
+            add_humans(hum)
+          end
 				end
-			
 		end
 
 		private
@@ -104,7 +123,36 @@ module Directors
 			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
 			
 			@bombs -= removed_bombs
-			@score += removed_bombs.size
+			# @score += removed_bombs.size
+		end
+
+		#ランダムな位置にhumanを出力
+		def human_randomGenerate
+			randomx = rand(30)
+			randomz = rand(30)
+			return Human.new(randomx,GROUND_LEVEL + 1,randomz)
+		end
+
+		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
+		def human_Eat(human)
+			#removed_objには接触したbombとhumanのobjが入る.引数[0]にbomb,引数[1]にhumanが入る.
+			removed_obj = human.hitted_bombs(@bombs)
+			#爆弾オブジェクトが格納される
+			removed_obj[0].each{|bomb| self.scene.remove(bomb.mesh) }
+			removed_obj[1].each do |hum|
+				self.scene.remove(hum.mesh)
+			end	
+			@bombs -= removed_obj[0]
+			@humans -= removed_obj[1]
+			@score += removed_obj[0].size
+
+			# if removed_obj[1].gradeCheck == 2
+			# 	@score += 3
+			# elsif removed_obj[1].gradeCheck == 2 
+			# 	@score += 2 
+			# elsif removed_obj[1].gradeCheck == 1
+			# 	@score += 1
+			# end
 		end
 
 		# シーンに爆弾を追加
@@ -112,6 +160,14 @@ module Directors
 			bombs.each do |bomb|
 				self.scene.add(bomb.mesh)
 				@bombs << bomb
+			end
+		end
+
+		#シーンに人間を追加
+		def add_humans(humans)
+			humans.each do |human|
+				self.scene.add(human.mesh)
+				@humans << human
 			end
 		end
 
@@ -155,7 +211,7 @@ module Directors
 
 		# シーンに光源を追加
 		def add_lights
-			light = Mittsu::PointLight.new(0xffffff)
+			light = Mittsu::AmbientLight.new(0xffffff)
 			light.position.set(1, 7, 1)
 			self.scene.add(light)
 		end
