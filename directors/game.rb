@@ -128,9 +128,19 @@ module Directors
 
 		#ランダムな位置にhumanを出力
 		def human_randomGenerate
-			randomx = rand(30)
-			randomz = rand(30)
-			return Human.new(randomx,GROUND_LEVEL + 1,randomz)
+			randomx = rand(20)
+			randomz = rand(20)
+			
+			#1/2の確率でrandomx,yの座標の正負を反転させる
+			if [true,false].sample
+				randomx = -randomx
+			end
+			if[true,false].sample
+				randomz = -randomz
+			end
+			
+			hum = Human.new(randomx,GROUND_LEVEL+1,randomz)
+			return hum
 		end
 
 		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
