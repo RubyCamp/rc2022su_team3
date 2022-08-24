@@ -25,7 +25,7 @@ class Bomb
 			geom_type: :sphere,
 			mat_type: :phong,
 			radius: 0.5,
-			color: 0xffffff
+			texture_map: MeshFactory.get_texture("textures/takoyaki.png")
 		)
 		@plane = MeshFactory.generate(
 			geom_type: :sphere,

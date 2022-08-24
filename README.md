@@ -2,4 +2,8 @@
 RubyCamp2022 Summer Team3
 
 issei push
+
+syuri push
+
 massu push
+
