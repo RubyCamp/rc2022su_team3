@@ -23,6 +23,7 @@ module Directors
 			# テキスト用ボードオブジェクト追加
 			vs_com_board = TextBoard.new(texture_path: "textures/solo_play.png", value: Directors::Game::VS_COM_MODE, y: -0.5, scale_x: 3.5)
 			vs_player_board = TextBoard.new(texture_path: "textures/multi_play.png", value: Directors::Game::VS_PLAYER_MODE, y: -1.7, scale_x: 3.5)
+			exit_board = TextBoard.new(texture_path: "textures/exit.png", value: "EXIT", y: -5.0, scale_x: 3.5)
 			self.scene.add(vs_com_board.mesh)
 			self.scene.add(vs_player_board.mesh)
 			self.scene.add(exit_board.mesh)
