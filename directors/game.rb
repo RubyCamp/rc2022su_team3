@@ -10,8 +10,8 @@ module Directors
 
 		ATTACKER_LEVEL = 8    # 攻撃側プレイヤーの「高度」（Y座標値）
 		DEFENDER_LEVEL = 0   # 防御側プレイヤーの「高度」（Y座標値）
-		GROUND_LEVEL = -9     # 地面オブジェクトの「高度」（Y座標値）
-		GROUND_SIZE = 50.0    # 地面オブジェクトの広がり（面積）。地面オブジェクトは正方形のBoxで表現する
+		GROUND_LEVEL = -14     # 地面オブジェクトの「高度」（Y座標値）
+		GROUND_SIZE = 100.0    # 地面オブジェクトの広がり（面積）。地面オブジェクトは正方形のBoxで表現する
 		# GAME_TIME = 60
 
 		# コンストラクタ
@@ -100,10 +100,10 @@ module Directors
 			#human追加テスト用関数
 			if key_down?(key: :k_z)
 				puts "add humans"
-				hum = []
-				# hum  << human_randomGenerate
-				hum << Human.new(1,-8,0)
-				add_humans(hum)
+				hums = []
+				hums  << human_randomGenerate
+				# hums << Human.new(1,-8,0)
+				add_humans(hums)
 			end
 			end
 		end
@@ -153,6 +153,23 @@ module Directors
 			# elsif removed_obj[1].gradeCheck == 1
 			# 	@score += 1
 			# end
+		end
+
+		def human_randomGenerate
+			randomx = rand(20)
+			randomz = rand(20)
+			
+			#1/2の確率でrandomx,yの座標の正負を反転させる
+			if [true,false].sample
+				randomx = -randomx
+			end
+			if[true,false].sample
+				randomz = -randomz
+			end
+			
+			hum = Human.new(randomx,GROUND_LEVEL+1,randomz)
+			return hum
+			
 		end
 
 		# シーンに爆弾を追加
