@@ -42,10 +42,10 @@ module Players
 		# キャラクタの移動に使用されるキーの定義
 		def control_keys
 			[
-				:k_left,  # 左移動
-				:k_right,  # 右移動
-				:k_up,  # 上移動
-				:k_down,  # 下移動
+				:k_a,  # 左移動
+				:k_d,  # 右移動
+				:k_w,  # 上移動
+				:k_s,  # 下移動
 				:k_enter   # 爆弾投下
 			]
 		end
@@ -55,11 +55,11 @@ module Players
 			# ゲームモードに応じてキャラクタの移動方法を選択する
 			case selected_mode
 			when Directors::Game::VS_COM_MODE
-				# CPUによるランダム移動
-				random_move
+				move_by_keyboard(key_statuses)
+				# random_move
 			else
 				# 人間の手によるキーボード操作
-				move_by_keyboard(key_statuses)
+			  move_by_keyboard(key_statuses)
 			end
 			# タイマー変数がBOMBING_INTERVAL未満の場合はカウント増加
 			@bomb_timer += 1 if @bomb_timer < BOMBING_INTERVAL

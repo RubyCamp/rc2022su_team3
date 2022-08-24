@@ -7,9 +7,8 @@ module Directors
 		def initialize(renderer:, aspect:)
 			# スーパークラスのコンストラクタ実行
 			super
-
 			# タイトル画面の次に遷移する画面（ゲーム本編）用のディレクターオブジェクトを生成
-			@game_director = Directors::Game.new(renderer: renderer, aspect: aspect)
+			@game_director = Directors::Game.new(renderer: renderer, aspect: aspect, title_director: self)
 
 			# 地球のメッシュを生成してシーンに追加
 			@earth = MeshFactory.get_earth
@@ -65,23 +64,15 @@ module Directors
 			intersected = intersects.first
 			if intersected
 				text_board = @selectors[intersected[:object]]
-				transition_scene(text_board.value)
+				transition(text_board.value)
 			end
 		end
 
 		# シーン切り替え実行
-		def transition_scene(val)
+		def transition(val)
 			# 次のシーンに選択された値を送る
 			@game_director.selected_mode = val
-
-			# 次のシーンを担当するディレクターのMittsuイベントのアクティベートを行う。
-			# ※ シーンを切り替える瞬間に行わないと、後発のディレクターのイベントハンドラで先発のイベントハンドラが
-			#    上書きされてしまうため、このタイミングで実行する。
-			@game_director.activate_events
-
-			# next_directorアクセサを切り替えることで、次のフレームの描画からシーンが切り替わる。
-			# ※ このメカニズムはmain.rb側のメインループで実現している点に注意
-			self.next_director = @game_director
+			transition_scene(@game_director)
 		end
 
 		# シーンに光源を追加

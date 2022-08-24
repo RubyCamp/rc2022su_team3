@@ -7,7 +7,6 @@ module Directors
 
 		# Mittsuのシーンオブジェクトと、Mittsuのカメラオブジェクト（のラッピング）へのアクセサを定義する
 		attr_accessor :scene, :camera, :next_director
-
 		# コンストラクタ
 		# カメラのアスペクト比等を決定し、レンダラーやイベントハンドラを定義する
 		def initialize(renderer:, aspect:, camera: nil)
@@ -15,6 +14,7 @@ module Directors
 			camera = Camera.new(aspect: aspect) unless camera
 			self.scene = Mittsu::Scene.new
 			self.camera = camera
+			#camera.rb36
 			self.scene.add(camera.container)
 
 			# 次フレームの描画を担当する「next_director」アクセサの初期値をself（このディレクター自身）に
@@ -22,6 +22,17 @@ module Directors
 			self.next_director = self
 		end
 
+		def transition_scene(director)
+			director.next_director = director
+			# 次のシーンを担当するディレクターのMittsuイベントのアクティベートを行う。
+			# ※ シーンを切り替える瞬間に行わないと、後発のディレクターのイベントハンドラで先発のイベントハンドラが
+			#    上書きされてしまうため、このタイミングで実行する。
+			director.activate_events
+
+			# next_directorアクセサを切り替えることで、次のフレームの描画からシーンが切り替わる。
+			# ※ このメカニズムはmain.rb側のメインループで実現している点に注意
+			self.next_director = director
+		end
 		# Mittsuのイベントをラッピングし、イベントハンドラメソッドを定義する
 		def activate_events
 			# ウィンドウリサイズ
