@@ -4,7 +4,7 @@ require_relative 'mesh_factory'
 class Bomb
 	# 爆弾の3D形状（メッシュ）へのアクセサ
 	attr_reader :mesh
-	attr_reader :plane
+	# attr_reader :plane
 	attr_reader :bom_start_time
 	# 与えられたBombオブジェクトの配列について、それぞれ1フレーム分動かした上でシーンから抹消されるべき個体を配列で返す。
 	def self.operation(bombs, ground_level)
@@ -27,12 +27,12 @@ class Bomb
 			radius: 0.5,
 			texture_map: MeshFactory.get_texture("textures/takoyaki.png")
 		)
-		@plane = MeshFactory.generate(
-			geom_type: :sphere,
-			mat_type: :phong,
-			radius: 0.5,
-			color: 0xff0000
-		) #-> BoxGeome
+		# @plane = MeshFactory.generate(
+		# 	geom_type: :sphere,
+		# 	mat_type: :phong,
+		# 	radius: 0.5,
+		# 	color: 0xff0000
+		# ) #-> BoxGeome
 
 		# 爆弾の初期位置に対して、Y軸を1.0降ろして爆弾の初期座標を決定する。
 		# ※ 引数posには攻撃側プレイヤーの座標がそのまま渡されてくることを前提するため、初期位置が重ならないようにする。

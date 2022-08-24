@@ -4,24 +4,28 @@ module Directors
 	# ゲーム本編のシーン制御用ディレクタークラス
 	class Game < Base
 		attr_accessor :selected_mode
-
+		attr_reader :start_time
 		VS_COM_MODE = "com"
 		VS_PLAYER_MODE = "player"
 
 		ATTACKER_LEVEL = 8    # 攻撃側プレイヤーの「高度」（Y座標値）
-		DEFENDER_LEVEL = -8   # 防御側プレイヤーの「高度」（Y座標値）
-		GROUND_LEVEL = -14     # 地面オブジェクトの「高度」（Y座標値）
-		GROUND_SIZE = 100.0    # 地面オブジェクトの広がり（面積）。地面オブジェクトは正方形のBoxで表現する
+		DEFENDER_LEVEL = 0   # 防御側プレイヤーの「高度」（Y座標値）
+		GROUND_LEVEL = -9     # 地面オブジェクトの「高度」（Y座標値）
+		GROUND_SIZE = 50.0    # 地面オブジェクトの広がり（面積）。地面オブジェクトは正方形のBoxで表現する
+		# GAME_TIME = 60
 
 		# コンストラクタ
-		def initialize(renderer:, aspect:)
+		def initialize(renderer:, aspect:, title_director:)
 			# スーパークラスのコンストラクタ実行
-			super
-
+			super(renderer: renderer, aspect: aspect)
+			# ゲーム本編画面の次に遷移する画面（ゲームタイトル）用のディレクターオブジェクトを生成
+			@title_director = title_director
+			# @title_director = Directors::Title.new(renderer: renderer, aspect: aspect)
+			
 			# ゲームモード（対人・対COMの選択）のデフォルトを定義
 			self.selected_mode = VS_COM_MODE
 
-			# SkyBoxをシーンに追加する
+			# SkyBoxをシーンに追加する(周りの壁)
 			@skybox = SkyBox.new
 			self.scene.add(@skybox.mesh)
 
@@ -40,7 +44,7 @@ module Directors
 
 			@players = []
 			@players << Players::Attacker.new(level: ATTACKER_LEVEL)
-			@players << Players::Defender.new(level: DEFENDER_LEVEL)
+			# @players << Players::Defender.new(level: DEFENDER_LEVEL)
 
 			# 各プレイヤーのメッシュをシーンに登録
 			@players.each{|player| self.scene.add(player.mesh) }
@@ -51,32 +55,57 @@ module Directors
 
 			# 攻撃側プレイヤーの獲得スコアの初期化
 			@score = 0
+
+			# 1試合の時間
+			@game_time = 60
+			# Mittsuのイベントをアクティベート（有効化）する
+			# activate_events
+		end
+
+		def timer
+			@start_time ||= Time.now
+			@count_time = Time.now - @start_time
+			@countdown_time = @game_time+1 - @count_time
+			p @countdown_time
+			if @count_time > @game_time
+				transition
+			end
+		end
+
+		#画面遷移
+		def transition
+			@start_time = Time.now
+			transition_scene(@title_director)
 		end
 
 		# 1フレーム分のゲーム進行処理
 		def render_frame
-			@players.each do |player|
-				key_statuses = check_key_statuses(player)
-				player.play(key_statuses, self.selected_mode)
-				add_bombs(player.collect_bombs)
-				intercept(player)
-			end
-			erase_bombs
-			self.camera.draw_score(@score)
 
-			@humans.each do |human|
-				human_Eat(human)
-			end
+			  timer
+				if @count_time < @game_time
+					@players.each do |player|
+					key_statuses = check_key_statuses(player)
+					player.play(key_statuses, self.selected_mode)
+					add_bombs(player.collect_bombs)
+					intercept(player)
+			  	end
+					erase_bombs
+			    self.camera.draw_score(@score)
+					self.camera.draw_time(@countdown_time)
+          @humans.each do |human|
+          　human_Eat(human)
+          end
 
-			#human追加テスト用関数
-			if key_down?(key: :k_z)
-				
-				puts "add humans"
-				hum = []
-				# hum  << human_randomGenerate
-				hum << Human.new(1,-8,0)
-				add_humans(hum)
-			end
+          #human追加テスト用関数
+          if key_down?(key: :k_z)
+
+            puts "add humans"
+            hum = []
+            # hum  << human_randomGenerate
+            hum << Human.new(1,-8,0)
+            add_humans(hum)
+          end
+				end
 		end
 
 		private

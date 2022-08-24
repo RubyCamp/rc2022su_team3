@@ -32,7 +32,8 @@ class ScoreBoard
 		return if @prev_score == score
 		x = @x
 		remove_exists_sprites
-		formatted_score = "%04d" % score
+		#桁数を変える
+		formatted_score = "%03d" % score
 		formatted_score.split(//).each do |num|
 			sprite = generate_sprite(num, x, @y)
 			@sprites << sprite
