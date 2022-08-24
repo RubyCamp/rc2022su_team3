@@ -1,11 +1,11 @@
 require_relative '../lib/mesh_factory.rb'
 
 class Human
-	attr_reader :mesh
+	attr_reader :mesh, :grade
 	#bomb（たこやき）と人間が接触したとみなされる距離
 	INTERCEPTABLE_DISTANCE = 2.0
 
-	def initialize(x, y, z)
+	def initialize(x, y, z, grade)
 		#(x:,y,:,z:)
 		#MeshFactoryクラスを利用してノーマルな正方形のmeshを生成する
 		@mesh = MeshFactory.generate(
@@ -13,15 +13,13 @@ class Human
 			mat_type: :phong,
 			color: 0xffffff
 		)
-
-		# @grade = grade
-
-		# 1フレームにおいてpopした人間を格納する配列を初期化
-		# @humans = []
-
+		
 		self.mesh.position.x = x
 		self.mesh.position.y = y
 		self.mesh.position.z = z
+
+		#gradeには1~3までの数値が入る
+		@grade = grade
 
 		#defenderクラスからのコピペ
 		# 交差判定用Raycasterの向きを決定する単位ベクトルを生成する
@@ -31,29 +29,13 @@ class Human
 		@raycaster = Mittsu::Raycaster.new
 	end
 
-	# def humanAdd
-	# 	@humans << Human.new(1,1,1)
-	# end
-	
-	# def collect_humans
-	# 	result = @humans.dup # 回収される爆弾を取り出す
-	# 	@humans.clear # 爆弾保管用配列をクリアする
-	# 	result
-	# end
-
-	#たこやきと接触したhumanの配列が返される処理を書く
-	# def self.operation(humans)
-	# 	removed_humans = []
-	# 	humans.each do |human|
-	# 		removed = human.move(ground_level)
-	# 		removed_bombs << human if removed
-	# 	end
-	# 	return removed_bombs
-	# end
-	
+	def gradeCheck
+		return self.grade
+	end
 
 	def hitted_bombs(bombs = [])
 		intercepted_bombs = []
+		intercepted_humans = []
 		bomb_map = {}
 		bombs.each do |bomb|
 			bomb_map[bomb.mesh] = bomb
@@ -68,10 +50,11 @@ class Human
 				distance = self.mesh.position.distance_to(obj.position)
 				if distance <= INTERCEPTABLE_DISTANCE
 					intercepted_bombs << bomb_map[obj]
+					intercepted_humans << self
 				end
 			end
 		end
-		intercepted_bombs
+		return intercepted_bombs,intercepted_humans
 	end
  
 end

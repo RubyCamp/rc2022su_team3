@@ -48,8 +48,6 @@ module Directors
 
 			# 攻撃側が落とす爆弾の保存用配列を初期化
 			@bombs = []
-			@x = []
-			@y = []
 
 			# 攻撃側プレイヤーの獲得スコアの初期化
 			@score = 0
@@ -62,32 +60,21 @@ module Directors
 				player.play(key_statuses, self.selected_mode)
 				add_bombs(player.collect_bombs)
 				intercept(player)
-				
 			end
 			erase_bombs
 			self.camera.draw_score(@score)
 
 			@humans.each do |human|
-				delete_bomb = human_Eat(human)
-				@x = delete_bomb
+				human_Eat(human)
 			end
-
-			@bombs.each do |bomb|
-				delte_hum = human_leave(bomb)
-				@y = delte_hum
-			end
-
-			double_delete(@x,@y)
 
 			#human追加テスト用関数
 			if key_down?(key: :k_z)
 				
 				puts "add humans"
 				hum = []
-				hum << Human.new(1,-8,0)
-				hum << Human.new(5,-8,5)
-				hum << Human.new(7,-8,3)
-				hum << Human.new(11,-8,3)
+				hum << Human.new(1,-8,0,2)
+				hum << Human.new(5,-8,5,1)
 				add_humans(hum)
 			end
 		end
@@ -106,51 +93,29 @@ module Directors
 			removed_bombs = Bomb.operation(@bombs, GROUND_LEVEL)
 			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
 			@bombs -= removed_bombs
-			@score += removed_bombs.size
+			# @score += removed_bombs.size
 		end
 
 		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
 		def human_Eat(human)
-			#humanクラス.operationでたこ焼きがあたった場合の配列が渡される
-			removed_bombs = human.hitted_bombs(@bombs)
-			# removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
-			#ヒューマンの配列が返るメソッド
-			#大事なのはシーンをメッシュを消す前に、当たり判定をする
-			#すべてのボムをループさせて、すべての当たってるヒューマンを返す
-			#すべてのヒューマンをループさせて、すべての当たってるボムを返す配列
-			# @bombs -= removed_bombs
-			# puts removed_bombs
-			return removed_bombs
-			# removed_human.each{|human| self.scene.remove(bomb.mesh) }
+			#removed_objには接触したbombとhumanのobjが入る.引数[0]にbomb,引数[1]にhumanが入る.
+			removed_obj = human.hitted_bombs(@bombs)
+			#爆弾オブジェクトが格納される
+			removed_obj[0].each{|bomb| self.scene.remove(bomb.mesh) }
+			removed_obj[1].each do |hum|
+				self.scene.remove(hum.mesh)
+			end	
+			@bombs -= removed_obj[0]
+			@humans -= removed_obj[1]
+			@score += removed_obj[0].size
 
-			# if human.grade == 3
+			# if removed_obj[1].gradeCheck == 2
 			# 	@score += 3
-			# elsif human.grade == 2 
+			# elsif removed_obj[1].gradeCheck == 2 
 			# 	@score += 2 
-			# elsif human grade == 1
+			# elsif removed_obj[1].gradeCheck == 1
 			# 	@score += 1
 			# end
-		end
-
-		def human_leave(bomb)
-			removed_humans = bomb.hitted_humans(@humans)
-			# removed_humans.each{|hum|self.scene.remove(hum.mesh) } 
-			# @humans -= removed_humans
-			# puts removed_humans
-			return removed_humans
-		end
-
-			#消去されるべきオブジェクトの配列を渡したら二つまとめて消してくれるメソッド
-		def double_delete(bomb,hum)
-			puts "でりーと"
-			puts bomb
-			puts um
-			if bomb == true && hum == true
-				bomb.each{|x| self.scene.remove(x.mesh)}
-				hum.each{|y| self.scene.remove(y.mesh) }
-				@x = []
-				@y = []
-			end
 		end
 
 		# シーンに爆弾を追加
