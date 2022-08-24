@@ -48,6 +48,8 @@ module Directors
 
 			# 攻撃側が落とす爆弾の保存用配列を初期化
 			@bombs = []
+			@x = []
+			@y = []
 
 			# 攻撃側プレイヤーの獲得スコアの初期化
 			@score = 0
@@ -66,8 +68,16 @@ module Directors
 			self.camera.draw_score(@score)
 
 			@humans.each do |human|
-				human_Eat(human)
+				delete_bomb = human_Eat(human)
+				@x = delete_bomb
 			end
+
+			@bombs.each do |bomb|
+				delte_hum = human_leave(bomb)
+				@y = delte_hum
+			end
+
+			double_delete(@x,@y)
 
 			#human追加テスト用関数
 			if key_down?(key: :k_z)
@@ -102,9 +112,15 @@ module Directors
 		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
 		def human_Eat(human)
 			#humanクラス.operationでたこ焼きがあたった場合の配列が渡される
-			removed_bombs = human.eat_Bombs(@bombs)
-			removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
-			@bombs -= removed_bombs
+			removed_bombs = human.hitted_bombs(@bombs)
+			# removed_bombs.each{|bomb| self.scene.remove(bomb.mesh) }
+			#ヒューマンの配列が返るメソッド
+			#大事なのはシーンをメッシュを消す前に、当たり判定をする
+			#すべてのボムをループさせて、すべての当たってるヒューマンを返す
+			#すべてのヒューマンをループさせて、すべての当たってるボムを返す配列
+			# @bombs -= removed_bombs
+			# puts removed_bombs
+			return removed_bombs
 			# removed_human.each{|human| self.scene.remove(bomb.mesh) }
 
 			# if human.grade == 3
@@ -114,6 +130,27 @@ module Directors
 			# elsif human grade == 1
 			# 	@score += 1
 			# end
+		end
+
+		def human_leave(bomb)
+			removed_humans = bomb.hitted_humans(@humans)
+			# removed_humans.each{|hum|self.scene.remove(hum.mesh) } 
+			# @humans -= removed_humans
+			# puts removed_humans
+			return removed_humans
+		end
+
+			#消去されるべきオブジェクトの配列を渡したら二つまとめて消してくれるメソッド
+		def double_delete(bomb,hum)
+			puts "でりーと"
+			puts bomb
+			puts um
+			if bomb == true && hum == true
+				bomb.each{|x| self.scene.remove(x.mesh)}
+				hum.each{|y| self.scene.remove(y.mesh) }
+				@x = []
+				@y = []
+			end
 		end
 
 		# シーンに爆弾を追加

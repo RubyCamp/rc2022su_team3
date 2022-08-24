@@ -1,7 +1,7 @@
 require_relative '../lib/mesh_factory.rb'
 
 class Human
-	attr_reader:mesh
+	attr_reader :mesh
 	#bomb（たこやき）と人間が接触したとみなされる距離
 	INTERCEPTABLE_DISTANCE = 2.0
 
@@ -42,18 +42,17 @@ class Human
 	# end
 
 	#たこやきと接触したhumanの配列が返される処理を書く
-	def self.operation(humans)
-		removed_humans = []
-		humans.each do |human|
-			removed = human.move(ground_level)
-			removed_bombs << human if removed
-		end
-		return removed_bombs
-	end
-
+	# def self.operation(humans)
+	# 	removed_humans = []
+	# 	humans.each do |human|
+	# 		removed = human.move(ground_level)
+	# 		removed_bombs << human if removed
+	# 	end
+	# 	return removed_bombs
+	# end
 	
 
-	def eat_Bombs(bombs = [])
+	def hitted_bombs(bombs = [])
 		intercepted_bombs = []
 		bomb_map = {}
 		bombs.each do |bomb|

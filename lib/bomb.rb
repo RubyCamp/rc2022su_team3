@@ -4,7 +4,7 @@ require_relative 'mesh_factory'
 class Bomb
 	# 爆弾の3D形状（メッシュ）へのアクセサ
 	attr_reader :mesh
-
+	INTERCEPTABLE_DISTANCE = 2.0
 	# 与えられたBombオブジェクトの配列について、それぞれ1フレーム分動かした上でシーンから抹消されるべき個体を配列で返す。
 	def self.operation(bombs, ground_level)
 		removed_bombs = []
@@ -32,6 +32,33 @@ class Bomb
 		#       して利用する点に注意。
 		@mesh.position.copy(pos)
 		@mesh.position.y -= 1.0
+
+		@norm_vector = Mittsu::Vector3.new(0, -1, 0).normalize
+
+		# 交差判定用のRaycasterオブジェクトを生成する
+		@raycaster = Mittsu::Raycaster.new
+	end
+
+	def hitted_humans(humans = [])
+		intercepted_humans = []
+		human_map = {}
+		humans.each do |hum|
+			human_map[hum.mesh] = hum
+		end
+		meshes = human_map.keys
+		@raycaster.set(self.mesh.position, @norm_vector)
+		collisions = @raycaster.intersect_objects(meshes)
+		if collisions.size > 0
+			obj = collisions.first[:object] # 最も近距離にあるオブジェクトを得る
+			if meshes.include?(obj)
+				# 当該オブジェクトと、当たり判定元オブジェクトの位置との距離を測る
+				distance = self.mesh.position.distance_to(obj.position)
+				if distance <= INTERCEPTABLE_DISTANCE
+					intercepted_humans << human_map[obj]
+				end
+			end
+		end
+		intercepted_humans
 	end
 
 	# 爆弾を1フレーム分移動させる。
