@@ -4,12 +4,13 @@ module Directors
 	# タイトル画面のシーン制御用ディレクタークラス
 	class Ranking < Base
 		# コンストラクタ
-		def initialize(renderer:, aspect:, title_director:)
+		def initialize(renderer:, aspect:, title_director:, game_director:)
 			# スーパークラスのコンストラクタ実行
 			super(renderer: renderer, aspect: aspect)
 
 			# タイトル画面の次に遷移する画面（ゲーム本編）用のディレクターオブジェクトを生成
 			@title_director = title_director
+			@game_director = game_director
 
 			# 地球のメッシュを生成してシーンに追加
 			# @earth = MeshFactory.get_earth
@@ -42,6 +43,8 @@ module Directors
 		def render_frame
 			# 少しずつ地球のメッシュを回転させる（自転を表現）
 			# @earth.rotate_y(0.001)
+				self.camera.draw_ranking_score(@game_director.score)
+
 		end
 
 		private
@@ -75,12 +78,14 @@ module Directors
 
 		# シーン切り替え実行
 		def transition
+			@game_director.score = 0
+			@game_director.start_time = nil
 			transition_scene(@title_director)
 		end
 
 		# シーンに光源を追加
 		def add_lights
-			# 地球を照らすための照明
+			# resultを照らすための照明
 			tako_light = Mittsu::DirectionalLight.new(0xffffff)
 			tako_light.position.set(0, 0, 10)
 			self.scene.add(tako_light)
