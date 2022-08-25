@@ -11,7 +11,7 @@ class Human
 		@mesh = MeshFactory.generate(
 			geom_type: :box,
 			mat_type: :phong,
-			color: 0xffffff
+			color: 0XD0E040
 		)
 
 		self.mesh.position.x = x

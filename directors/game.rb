@@ -156,7 +156,6 @@ module Directors
 			#丸め込み
 			time = @countdown_time.floor
 			@cache_humtime ||= -1
-
 			
 			if time != @cache_humtime
 				#フレームごとに出力される時間が重複しないようにchashとして保存しておく
