@@ -4,6 +4,7 @@ module Players
 	# 攻撃側プレイヤーを定義するクラス
 	class Attacker < Base
 		BOMBING_INTERVAL = 30  # 投弾可能になるまでのインターバル（単位: フレーム数）
+		STRONG_BOMBING_INTERVAL = 300  # 投弾可能になるまでのインターバル（単位: フレーム数）
 
 		# 移動可能範囲の定義（対COMの場合にのみ適用）
 		X_RANGE = (-5..5).to_a
@@ -62,6 +63,7 @@ module Players
 			# 投弾間隔を制御するためのタイマー変数を初期化する。
 			# NOTE: 同タイマー変数がBOMBING_INTERVALに達していれば投下可能と定義する。
 			@bomb_timer = BOMBING_INTERVAL
+			@strong_bome_timer = STRONG_BOMBING_INTERVAL
 
 			# 1フレームにおいて投下した爆弾を格納する配列を初期化
 			@bombs = []
@@ -80,7 +82,8 @@ module Players
 				:k_d,  # 右移動
 				:k_w,  # 上移動
 				:k_s,  # 下移動
-				:k_enter   # 爆弾投下
+				:k_enter, # 爆弾投下
+				:k_space #必殺技
 			]
 		end
 
@@ -97,6 +100,7 @@ module Players
 			end
 			# タイマー変数がBOMBING_INTERVAL未満の場合はカウント増加
 			@bomb_timer += 1 if @bomb_timer < BOMBING_INTERVAL
+			@strong_bome_timer += 1 if @strong_bome_timer < STRONG_BOMBING_INTERVAL
 		end
 
 		# 爆弾回収用メソッド。
@@ -149,11 +153,17 @@ module Players
 			# 爆弾投下キーが押下され、且つ爆撃準備完了（タイマー変数がBOMBING_INTERVAL分まで回復）している場合、
 			# 爆撃を実行する。
 			bombing if key_statuses[control_keys[4]] && can_be_thrown?
+			strongBombing if key_statuses[control_keys[5]] && can_be_strongThrown?
+			# p "strongBombing" if key_statuses[control_keys[5]] && can_be_strongThrown?
 		end
 
 		# 爆弾投下可否を返す
 		def can_be_thrown?
 			@bomb_timer == BOMBING_INTERVAL
+		end
+
+		def can_be_strongThrown?
+			@strong_bome_timer == STRONG_BOMBING_INTERVAL
 		end
 
 		# 爆撃実行。
@@ -163,6 +173,31 @@ module Players
 		def bombing
 			@bombs << Bomb.new(pos: self.mesh.position)
 			@bomb_timer = 0
+		end
+
+		def strongBombing
+			#1/2の確率でrandomx,yの座標の正負を反転させる
+
+			20.times do |ys|
+				randomx = ys
+				randomz = ys
+
+				if [true,false].sample
+					randomx = -randomx
+				end
+				if[true,false].sample
+					randomz = -randomz
+				end
+
+				x = self.mesh.position.x + randomx
+				y = self.mesh.position.y - ys
+				z = self.mesh.position.z + randomz
+				# print x
+				pos = Mittsu::Vector3.new(x,y,z)
+				@bombs << Bomb.new(pos: pos)
+				@strong_bome_timer = 0
+			end
+
 		end
 	end
 end
