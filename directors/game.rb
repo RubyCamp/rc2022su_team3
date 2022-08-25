@@ -95,7 +95,7 @@ module Directors
 			self.camera.draw_time(@countdown_time)
 
 			#a秒時点でhumanを召喚するメソッド
-			human_timeCheckGn(60,55,50,45,40)
+			human_timeCheckGn(60,55,50,45,40,35,30,25,20,15,10)
 
 			#human関係の処理
 			@humans.each do |hum|
@@ -136,8 +136,8 @@ module Directors
 		def human_randomGenerate
 			# countstart_time = Time.now - @start_time
 			countstart_time = @countdown_time
-			randomx = rand(20)
-			randomz = rand(20)
+			randomx = rand(50)
+			randomz = rand(50)
 			
 			#1/2の確率でrandomx,yの座標の正負を反転させる
 			if [true,false].sample
@@ -152,7 +152,7 @@ module Directors
 		end
 
 		#gameの残り時間a,b,c,d,eに応じてhuman召喚
-		def human_timeCheckGn(a,b,c,d,e)
+		def human_timeCheckGn(a,b,c,d,e,f,g,h,i,j,k)
 			#丸め込み
 			time = @countdown_time.floor
 			@cache_humtime ||= -1
@@ -164,19 +164,37 @@ module Directors
 				hums = []
 				if time == a
 					#5.timesの5の値を変えればスポーン数が調整できます
-					5.times{hums << human_randomGenerate}
+					100.times{hums << human_randomGenerate}
 					add_humans(hums)	
 				elsif time == b
-					10.times{hums << human_randomGenerate}
+					100.times{hums << human_randomGenerate}
 					add_humans(hums)
 				elsif time == c
-					10.times{hums << human_randomGenerate}
+					120.times{hums << human_randomGenerate}
 					add_humans(hums)
 				elsif time == d
-					10.times{hums << human_randomGenerate}
+					80.times{hums << human_randomGenerate}
 					add_humans(hums)
 				elsif time == e
-					10.times{hums << human_randomGenerate}
+					70.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == f
+					90.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == g
+					70.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == h
+					60.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == i
+					60.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == j
+					60.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == k
+					80.times{hums << human_randomGenerate}
 					add_humans(hums)
 				end
 			end			
