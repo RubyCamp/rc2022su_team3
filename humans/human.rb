@@ -8,12 +8,7 @@ class Human
 	def initialize(x, y, z, cratetime)
 		#(x:,y,:,z:)
 		#MeshFactoryクラスを利用してノーマルな正方形のmeshを生成する
-		@mesh = MeshFactory.generate(
-			geom_type: :box,
-			mat_type: :phong,
-			color: 0xffffff
-		)
-
+		@mesh = MeshFactory.human
 		self.mesh.position.x = x
 		self.mesh.position.y = y
 		self.mesh.position.z = z

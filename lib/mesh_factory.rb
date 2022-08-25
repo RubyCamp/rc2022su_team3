@@ -1,5 +1,15 @@
 # Mittsuの3D形状オブジェクト（Mesh）を生成するためのファクトリークラス
 class MeshFactory
+	@@loader = Mittsu::OBJMTLLoader.new
+
+	def self.human	
+		@@human = @@loader.load(File.expand_path('../../textures/male02.obj', __FILE__), 'male02.mtl')
+		@@human.scale.x = 0.026
+		@@human.scale.y = 0.026
+		@@human.scale.z = 0.026
+		@@human
+	end
+
 	# Mesh生成用クラスメソッド
 	def self.generate(attr = {})
 		raise "geom_typeキー(値: symbol)は必須です。" unless attr.has_key?(:geom_type)
