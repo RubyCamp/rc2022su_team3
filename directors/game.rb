@@ -82,31 +82,36 @@ module Directors
 		# 1フレーム分のゲーム進行処理
 		def render_frame
 
-			  timer
-				if @count_time < @game_time
-					@players.each do |player|
-					key_statuses = check_key_statuses(player)
-					player.play(key_statuses, self.selected_mode)
-					add_bombs(player.collect_bombs)
-					intercept(player)
-			  	end
-					erase_bombs
-			    self.camera.draw_score(@score)
-					self.camera.draw_time(@countdown_time)
-          @humans.each do |human|
-           human_Eat(human)
-          end
+			timer
+			if @count_time < @game_time
+				@players.each do |player|
+				key_statuses = check_key_statuses(player)
+				player.play(key_statuses, self.selected_mode)
+				add_bombs(player.collect_bombs)
+				intercept(player)
+		  	end
+			erase_bombs
+			self.camera.draw_score(@score)
+			self.camera.draw_time(@countdown_time)
 
-          #human追加テスト用関数
-          if key_down?(key: :k_z)
+			#a秒時点でhumanを召喚するメソッド
+			human_timeCheckGn(60,55,50,45,40)
 
-            puts "add humans"
-            hum = []
-            # hum  << human_randomGenerate
-            hum << Human.new(1,-8,0)
-            add_humans(hum)
-          end
-				end
+			#human関係の処理
+			@humans.each do |hum|
+				human_Eat(hum)
+				human_timeCheckRm(hum)
+			end
+
+			#human追加テスト用関数
+			if key_down?(key: :k_z)
+				puts "add humans"
+				hums = []
+				hums  << human_randomGenerate
+				# hums << Human.new(1,-8,0)
+				add_humans(hums)
+			end
+			end
 		end
 
 		private
@@ -129,9 +134,61 @@ module Directors
 
 		#ランダムな位置にhumanを出力
 		def human_randomGenerate
-			randomx = rand(30)
-			randomz = rand(30)
-			return Human.new(randomx,GROUND_LEVEL + 1,randomz)
+			# countstart_time = Time.now - @start_time
+			countstart_time = @countdown_time
+			randomx = rand(20)
+			randomz = rand(20)
+			
+			#1/2の確率でrandomx,yの座標の正負を反転させる
+			if [true,false].sample
+				randomx = -randomx
+			end
+			if[true,false].sample
+				randomz = -randomz
+			end
+			
+			hum = Human.new(randomx,GROUND_LEVEL+1,randomz,countstart_time)
+			return hum
+		end
+
+		#gameの残り時間a,b,c,d,eに応じてhuman召喚
+		def human_timeCheckGn(a,b,c,d,e)
+			#丸め込み
+			time = @countdown_time.floor
+			@cache_humtime ||= -1
+
+			
+			if time != @cache_humtime
+				#フレームごとに出力される時間が重複しないようにchashとして保存しておく
+				@cache_humtime = time
+				hums = []
+				if time == a
+					#5.timesの5の値を変えればスポーン数が調整できます
+					5.times{hums << human_randomGenerate}
+					add_humans(hums)	
+				elsif time == b
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == c
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == d
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == e
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				end
+			end			
+		end
+
+		#humanオブジェクトが10秒時間経過しているかチェックして、経過していたら削除
+		def human_timeCheckRm(human)
+			humtime = human.timeReturn
+			if  humtime - @countdown_time > 10
+				self.scene.remove(human.mesh)
+				@humans.delete(human)
+			end
 		end
 
 		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
@@ -140,9 +197,9 @@ module Directors
 			removed_obj = human.hitted_bombs(@bombs)
 			#爆弾オブジェクトが格納される
 			removed_obj[0].each{|bomb| self.scene.remove(bomb.mesh) }
-			removed_obj[1].each do |hum|
-				self.scene.remove(hum.mesh)
-			end	
+			removed_obj[1].each{ |hum|
+				p hum.timeReturn
+				self.scene.remove(hum.mesh)}	
 			@bombs -= removed_obj[0]
 			@humans -= removed_obj[1]
 			@score += removed_obj[0].size
@@ -155,6 +212,23 @@ module Directors
 			# 	@score += 1
 			# end
 		end
+
+		# def human_randomGenerate
+		# 	randomx = rand(20)
+		# 	randomz = rand(20)
+			
+		# 	#1/2の確率でrandomx,yの座標の正負を反転させる
+		# 	if [true,false].sample
+		# 		randomx = -randomx
+		# 	end
+		# 	if[true,false].sample
+		# 		randomz = -randomz
+		# 	end
+			
+		# 	hum = Human.new(randomx,GROUND_LEVEL+1,randomz)
+		# 	return hum
+			
+		# end
 
 		# シーンに爆弾を追加
 		def add_bombs(bombs)
