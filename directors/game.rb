@@ -20,6 +20,7 @@ module Directors
 			super(renderer: renderer, aspect: aspect)
 			# ゲーム本編画面の次に遷移する画面（ゲームタイトル）用のディレクターオブジェクトを生成
 			@title_director = title_director
+			@ranking_director = Directors::Ranking.new(renderer: renderer, aspect: aspect, title_director: title_director)
 			# @title_director = Directors::Title.new(renderer: renderer, aspect: aspect)
 			
 			# ゲームモード（対人・対COMの選択）のデフォルトを定義
@@ -75,7 +76,7 @@ module Directors
 		#画面遷移
 		def transition
 			@start_time = Time.now
-			transition_scene(@title_director)
+			transition_scene(@ranking_director)
 		end
 
 		# 1フレーム分のゲーム進行処理
