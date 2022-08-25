@@ -93,8 +93,9 @@ module Directors
 			self.camera.draw_score(@score)
 			self.camera.draw_time(@countdown_time)
 
-			@humans.each do |human|
-				human_Eat(human)
+			@humans.each do |hum|
+				human_Eat(hum)
+				human_timeCheckRm(hum)
 			end
 
 			#human追加テスト用関数
@@ -128,6 +129,8 @@ module Directors
 
 		#ランダムな位置にhumanを出力
 		def human_randomGenerate
+			# countstart_time = Time.now - @start_time
+			countstart_time = @countdown_time
 			randomx = rand(20)
 			randomz = rand(20)
 			
@@ -139,8 +142,18 @@ module Directors
 				randomz = -randomz
 			end
 			
-			hum = Human.new(randomx,GROUND_LEVEL+1,randomz)
+			hum = Human.new(randomx,GROUND_LEVEL+1,randomz,countstart_time)
 			return hum
+		end
+
+		#humanオブジェクトが10秒時間経過しているかチェックして、経過していたら削除
+		def human_timeCheckRm(human)
+			humtime = human.timeReturn
+			print @humans.include?(human)
+			if  humtime - @countdown_time > 10
+				self.scene.remove(human.mesh)
+				@humans.delete(human)
+			end
 		end
 
 		#たこやきが接触したhumanインスタンス配列を渡すと、スコアの増加とbomb(たこやき)meshの削除,human(人間)meshの削除を行う
@@ -149,9 +162,9 @@ module Directors
 			removed_obj = human.hitted_bombs(@bombs)
 			#爆弾オブジェクトが格納される
 			removed_obj[0].each{|bomb| self.scene.remove(bomb.mesh) }
-			removed_obj[1].each do |hum|
-				self.scene.remove(hum.mesh)
-			end	
+			removed_obj[1].each{ |hum|
+				p hum.timeReturn
+				self.scene.remove(hum.mesh)}	
 			@bombs -= removed_obj[0]
 			@humans -= removed_obj[1]
 			@score += removed_obj[0].size
@@ -165,22 +178,22 @@ module Directors
 			# end
 		end
 
-		def human_randomGenerate
-			randomx = rand(20)
-			randomz = rand(20)
+		# def human_randomGenerate
+		# 	randomx = rand(20)
+		# 	randomz = rand(20)
 			
-			#1/2の確率でrandomx,yの座標の正負を反転させる
-			if [true,false].sample
-				randomx = -randomx
-			end
-			if[true,false].sample
-				randomz = -randomz
-			end
+		# 	#1/2の確率でrandomx,yの座標の正負を反転させる
+		# 	if [true,false].sample
+		# 		randomx = -randomx
+		# 	end
+		# 	if[true,false].sample
+		# 		randomz = -randomz
+		# 	end
 			
-			hum = Human.new(randomx,GROUND_LEVEL+1,randomz)
-			return hum
+		# 	hum = Human.new(randomx,GROUND_LEVEL+1,randomz)
+		# 	return hum
 			
-		end
+		# end
 
 		# シーンに爆弾を追加
 		def add_bombs(bombs)

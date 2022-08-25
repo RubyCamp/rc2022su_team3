@@ -5,7 +5,7 @@ class Human
 	#bomb（たこやき）と人間が接触したとみなされる距離
 	INTERCEPTABLE_DISTANCE = 2.0
 
-	def initialize(x, y, z)
+	def initialize(x, y, z, cratetime)
 		#(x:,y,:,z:)
 		#MeshFactoryクラスを利用してノーマルな正方形のmeshを生成する
 		@mesh = MeshFactory.generate(
@@ -18,6 +18,8 @@ class Human
 		self.mesh.position.y = y
 		self.mesh.position.z = z
 
+		@cratetime = cratetime
+		
 		#gradeには1~3までの数値が入る
 
 		#defenderクラスからのコピペ
@@ -28,8 +30,8 @@ class Human
 		@raycaster = Mittsu::Raycaster.new
 	end
 
-	def gradeCheck
-		return self.grade
+	def timeReturn
+		@cratetime
 	end
 
 	def hitted_bombs(bombs = [])
