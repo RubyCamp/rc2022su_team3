@@ -3,7 +3,7 @@ require_relative 'base'
 module Directors
 	# ゲーム本編のシーン制御用ディレクタークラス
 	class Game < Base
-		attr_accessor :selected_mode
+		attr_accessor :selected_mode, :score, :start_time
 		attr_reader :start_time
 		VS_COM_MODE = "com"
 		VS_PLAYER_MODE = "player"
@@ -20,7 +20,7 @@ module Directors
 			super(renderer: renderer, aspect: aspect)
 			# ゲーム本編画面の次に遷移する画面（ゲームタイトル）用のディレクターオブジェクトを生成
 			@title_director = title_director
-			@ranking_director = Directors::Ranking.new(renderer: renderer, aspect: aspect, title_director: title_director)
+			@ranking_director = Directors::Ranking.new(renderer: renderer, aspect: aspect, title_director: title_director, game_director:self)
 			# @title_director = Directors::Title.new(renderer: renderer, aspect: aspect)
 			
 			# ゲームモード（対人・対COMの選択）のデフォルトを定義

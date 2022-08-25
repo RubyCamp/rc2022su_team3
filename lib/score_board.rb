@@ -43,6 +43,21 @@ class ScoreBoard
 		@prev_score = score
 	end
 
+	def draw_ranking_score(score)
+		return if @prev_score == score
+		x = @x
+		remove_exists_sprites
+		#桁数を変える
+		formatted_score = "%03d" % score
+		formatted_score.split(//).each do |num|
+			sprite = generate_sprite(num, x, @y)
+			@sprites << sprite
+			@container.add(sprite)
+			x += 1
+		end
+		@prev_score = score
+	end
+
 	private
 
 	# 得点板を書き換えるために一度全スプライトをコンテナオブジェクトから消す
