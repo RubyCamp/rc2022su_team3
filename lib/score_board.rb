@@ -14,16 +14,16 @@ class ScoreBoard
 
 		# 0～9までの数字を表現するためのマテリアルオブジェクトを定義
 		@materials = {
-			mat_0: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite0.png')),
-			mat_1: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite1.png')),
-			mat_2: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite2.png')),
-			mat_3: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite3.png')),
-			mat_4: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite4.png')),
-			mat_5: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite5.png')),
-			mat_6: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite6.png')),
-			mat_7: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite7.png')),
-			mat_8: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite8.png')),
-			mat_9: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/sprite9.png')),
+			mat_0: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_0.png')),
+			mat_1: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_1.png')),
+			mat_2: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_2.png')),
+			mat_3: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_3.png')),
+			mat_4: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_4.png')),
+			mat_5: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_5.png')),
+			mat_6: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_6.png')),
+			mat_7: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_7.png')),
+			mat_8: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_8.png')),
+			mat_9: Mittsu::SpriteMaterial.new(map: MeshFactory.get_texture('textures/tako_9.png')),
 		}
 	end
 

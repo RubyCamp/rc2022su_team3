@@ -58,7 +58,7 @@ module Directors
 			@score = 0
 
 			# 1試合の時間
-			@game_time = 60
+			@game_time = 5
 			# Mittsuのイベントをアクティベート（有効化）する
 			# activate_events
 		end
