@@ -93,6 +93,10 @@ module Directors
 			self.camera.draw_score(@score)
 			self.camera.draw_time(@countdown_time)
 
+			#a秒時点でhumanを召喚するメソッド
+			human_timeCheckGn(60,55,50,45,40)
+
+			#human関係の処理
 			@humans.each do |hum|
 				human_Eat(hum)
 				human_timeCheckRm(hum)
@@ -146,10 +150,40 @@ module Directors
 			return hum
 		end
 
+		#gameの残り時間a,b,c,d,eに応じてhuman召喚
+		def human_timeCheckGn(a,b,c,d,e)
+			#丸め込み
+			time = @countdown_time.floor
+			@cache_humtime ||= -1
+
+			
+			if time != @cache_humtime
+				#フレームごとに出力される時間が重複しないようにchashとして保存しておく
+				@cache_humtime = time
+				hums = []
+				if time == a
+					#5.timesの5の値を変えればスポーン数が調整できます
+					5.times{hums << human_randomGenerate}
+					add_humans(hums)	
+				elsif time == b
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == c
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == d
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				elsif time == e
+					10.times{hums << human_randomGenerate}
+					add_humans(hums)
+				end
+			end			
+		end
+
 		#humanオブジェクトが10秒時間経過しているかチェックして、経過していたら削除
 		def human_timeCheckRm(human)
 			humtime = human.timeReturn
-			print @humans.include?(human)
 			if  humtime - @countdown_time > 10
 				self.scene.remove(human.mesh)
 				@humans.delete(human)
