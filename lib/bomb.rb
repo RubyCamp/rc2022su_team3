@@ -24,7 +24,7 @@ class Bomb
 		@mesh = MeshFactory.generate(
 			geom_type: :sphere,
 			mat_type: :phong,
-			radius: 0.5,
+			radius: 1,
 			texture_map: MeshFactory.get_texture("textures/takoyaki.png")
 		)
 		# @plane = MeshFactory.generate(
@@ -39,7 +39,7 @@ class Bomb
 		# NOTE: Meshのpositionを他のVector3オブジェクトと同じにするには、copyメソッドを使ってVector3オブジェクトを複製
 		#       して利用する点に注意。
 		@mesh.position.copy(pos)
-		@mesh.position.y -= 1.0
+		@mesh.position.y -= 0.9
 
 		@bom_start_time = Time.now
 
@@ -49,10 +49,10 @@ class Bomb
 	# 引数ground_levenは、爆弾が到達できる下限となるY座標値（そこがGround、つまり地表という意味になる）
 	def move(ground_level)
 		# 当たり判定
-		if @mesh.position.y < ground_level+1
+		if @mesh.position.y <= ground_level+1
 			@mesh.position.y = ground_level+1
 		else
-			@mesh.position.y -= 0.1
+			@mesh.position.y -= 0.5
 		end
 
 		if Time.now - @bom_start_time > 5 

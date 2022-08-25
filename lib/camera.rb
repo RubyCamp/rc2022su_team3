@@ -20,6 +20,7 @@ class Camera
 
 	# 得点のカウントをScoreBoardオブジェクトにdelegate（移譲）する
 	delegate draw_score: :@score_board
+	delegate draw_ranking_score: :@ranking_score_board
 	delegate draw_time: :@time_board
 	# コンストラクタ
 	# 得点表示用スプライト（ScoreBoard）やMittsuのPerspectiveCameraオブジェクトなど、必要な初期化を行う。
@@ -31,6 +32,7 @@ class Camera
 		#スコアボード表示
 		#ScoreBoardクラスから新しいオブジェクトを生成
 		@score_board = ScoreBoard.new(x: -14, y: 5)
+		@ranking_score_board = ScoreBoard.new(x: 0, y: 3)
 		@time_board = TimeBoard.new(x: -14, y:10)
 		
 		@instance.position.z = initial_z_pos
@@ -39,6 +41,7 @@ class Camera
 
 		@container.add(self.instance)
 		@container.add(@score_board.container)
+		@container.add(@ranking_score_board.container)
 		@container.add(@time_board.container)
 
 		@mouse_delta = Mittsu::Vector2.new
