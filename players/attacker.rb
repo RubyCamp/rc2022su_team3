@@ -19,11 +19,45 @@ module Players
 		def initialize(level: 0)
 			# キャラクタの3D形状を定義する情報。MeshFactoryクラスに渡される
 			attr = {
-				geom_type: :box,
+			geom_type: :sphere,
+			    radius: 0.7,
 				mat_type: :phong,
-				color: 0x00ff00
+				color: 0x000000,
+				theta_length: Math::PI / 2,
+				segment_w: 16,
+				segment_h: 16,
 			}
 			super(x: 0, y: level, z: 0, mesh_attr: attr)
+			attr = {
+			geom_type: :sphere,
+			segment_w: 16,
+			segment_h: 16,
+			mat_type: :phong,
+			radius: 0.5,
+			color: 0x000000,
+		    }
+		    child_mesh = MeshFactory.generate(attr)
+		    self.mesh.add(child_mesh)	
+            child_mesh.position.y += 0.1
+			
+			circle_attr = {
+				geom_type: :circle,
+				radius: 1.5,
+				theta_start: 0,
+				theta_length: Math::PI*2,
+				segment: 16,
+				color: 0x202020
+			}
+			
+			child_mesh2 = MeshFactory.generate(circle_attr)
+		    self.mesh.add(child_mesh2)	
+            child_mesh2.position.y += 0.0
+			child_mesh2.rotation.x += Math::PI/2
+			
+			child_mesh3 = MeshFactory.generate(circle_attr)
+		    self.mesh.add(child_mesh3)	
+            child_mesh3.position.y += 0.0
+			child_mesh3.rotation.x -= Math::PI/2
 
 			# 投弾間隔を制御するためのタイマー変数を初期化する。
 			# NOTE: 同タイマー変数がBOMBING_INTERVALに達していれば投下可能と定義する。

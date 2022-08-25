@@ -59,7 +59,7 @@ class MeshFactory
 
 		# 球ジオメトリ生成
 		when :sphere
-			radius = @attr[:radius] || 5.0
+			radius = @attr[:radius] || 1.0
 			segment_w = @attr[:segment_w] || 5
 			segment_h = @attr[:segment_h] || 5
 			phi_start = @attr[:phi_start] || 0.0
@@ -81,6 +81,16 @@ class MeshFactory
 				scale_x, scale_y,
 				segment_x, segment_y)
 
+		when :circle
+			radius = @attr[:radius] || 1.0
+			segment= @attr[:segment] || 5
+			theta_start = @attr[:theta_start] || 0.0
+			theta_length = @attr[:theta_length] || ::Math::PI
+			geom = Mittsu::CircleGeometry.new(
+				radius,  segment,
+				theta_start, theta_length)
+			
+			
 		# NOTE: 以下、必要に応じて拡張する
 		end
 
