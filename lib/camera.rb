@@ -32,7 +32,7 @@ class Camera
 		#スコアボード表示
 		#ScoreBoardクラスから新しいオブジェクトを生成
 		@score_board = ScoreBoard.new(x: -14, y: 5)
-		@ranking_score_board = ScoreBoard.new(x: 0, y: 3)
+		@ranking_score_board = ScoreBoard.new(x: -0.6, y: 3.3)
 		@time_board = TimeBoard.new(x: -14, y:10)
 		
 		@instance.position.z = initial_z_pos
